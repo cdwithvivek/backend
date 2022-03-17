@@ -1,8 +1,7 @@
-const amount = 12;
-if(amount<10){
-    console.log('small number');
-}else{
-    console.log('large number');
-}
-console.log(`hey it's my first node app!!!`);
-
+const names = require('./4-name');
+const fun = require('./5-util');
+// console.log(names)
+// console.log(fun)
+fun.sayHi('amit kumar');
+fun.sayHi(names.vivek);
+fun.sayHi(names.vishal);
