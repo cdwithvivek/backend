@@ -1,0 +1,2 @@
+Here is the result: This is the content we will read using fs module
+, This is fake content
