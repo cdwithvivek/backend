@@ -1,41 +1,19 @@
 const express = require('express')
 const app = express()
-const {people} = require('./data.js')
-// static assests middle-ware
+const people = require('./routes/people')
+const auth = require('./routes/auth')
+// static assets
 app.use(express.static('./methods-public'))
-app.use(express.urlencoded({extended :false}))
+// parse form data
+app.use(express.urlencoded({ extended: false }))
+// parse json
+app.use(express.json())
 
-app.get('/api/people', (req,res) =>{
-    res.status(200).json({sucess: true , data : people})
+// giving base using people router
+app.use('/api/people',people)
+// using auth router
+app.use('/login',auth)
+
+app.listen(5000, () => {
+  console.log('Server is listening on port 5000....')
 })
-
-
-
-// add data in server
-// cannot perform post request -> we have to setup  working app or postman
-
-
-app.post('/login', (req,res) =>{
-    const {name} = req.body
-    if(name){
-        return res.status(200).send(`welcome back ${name}`)
-    }
-    res.status(200).send('No name')
-})
-// using javascript
-
-app.post('/api/people' , (req,res) =>{
-    const {name} = req.body
-    
-    if(!name){
-        return res.status(400).json({sucess : false, msg : 'please provide name value'})
-    }
-    res.status(200).json({sucess: true, person : name })
-})
-app.listen(5000,(err)=>{
-    if(err){
-        console.log(err)
-        return;
-    }
-    console.log(`Server is listening to ... 5000`)
-});
