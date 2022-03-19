@@ -1,71 +1,41 @@
-console.log('Express Tutorial')
-/*
+const express = require('express')
+const app = express()
+const {people} = require('./data.js')
+// static assests middle-ware
+app.use(express.static('./methods-public'))
+app.use(express.urlencoded({extended :false}))
 
-//header
-const http = require('http')
-const {readFileSync} = require('fs')
-//get all files
-const homePage = readFileSync('./index.html')
-
-
-const PORT = 5000
-const server = http.createServer( (req,res) =>{
-    const url = req.url
-    //home page 
-    if(url ==='/'){
-        res.writeHead(200,{'content-type' : 'text/html'})
-        res.write(homePage)
-    } // about page
-    else if(url ==='/about'){
-        res.writeHead(200,{'content-type' : 'text/html'})
-        res.write('<h1> Welcome to about page </h1>')
-    } // not found resource
-    else{
-        res.writeHead(404,{'content-type' : 'text/html'})
-        res.write('<h1> 404 page not found </h1>')
-    }
-    console.log(req.method)
-    console.log(req.url)
-    res.end()
-    console.log("user hit the server")
-});
-
-*/
-
-// meaning full app 
-const PORT = 5000
-const http = require('http')
-const {readFileSync}= require('fs')
-// getting paths
-const navbar = readFileSync('./navbar-app/index.html')
-const navbarStyles = readFileSync('./navbar-app/styles.css')
-const navbarImage = readFileSync('./navbar-app/logo.svg')
-const navbarLogic = readFileSync('./navbar-app/browser-app.js')
-const server = http.createServer( (req,res) =>{
-    const url = req.url
-    console.log(url)
-    if(url === '/'){
-        res.writeHead(200,{'content-type' : 'text/html'})
-        res.write(navbar)
-        
-    }
-    if(url === '/styles.css'){
-        res.writeHead(200,{'content-type' : 'text/css'})
-        res.write(navbarStyles)
-    }
-    if(url === '/logo.svg'){
-        res.writeHead(200,{'content-type' : 'image/svg+xml'})
-        res.write(navbarImage)
-    }
-    if(url === '/browser-app.js'){
-        res.writeHead(200,{'content-type' : 'text/javascript'})
-        res.write(navbarLogic)
-    }
-    res.end()
+app.get('/api/people', (req,res) =>{
+    res.status(200).json({sucess: true , data : people})
 })
 
-server.listen(PORT, function(err){
-    if (err) console.log(err);
-    console.log("Server listening on PORT", PORT);
-});
 
+
+// add data in server
+// cannot perform post request -> we have to setup  working app or postman
+
+
+app.post('/login', (req,res) =>{
+    const {name} = req.body
+    if(name){
+        return res.status(200).send(`welcome back ${name}`)
+    }
+    res.status(200).send('No name')
+})
+// using javascript
+
+app.post('/api/people' , (req,res) =>{
+    const {name} = req.body
+    
+    if(!name){
+        return res.status(400).json({sucess : false, msg : 'please provide name value'})
+    }
+    res.status(200).json({sucess: true, person : name })
+})
+app.listen(5000,(err)=>{
+    if(err){
+        console.log(err)
+        return;
+    }
+    console.log(`Server is listening to ... 5000`)
+});
